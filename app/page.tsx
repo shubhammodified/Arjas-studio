@@ -8,11 +8,23 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { ProductFilter } from "@/components/product-filter"
 import { ProductGrid } from "@/components/product-grid"
 import { realProducts } from "@/lib/product-data"
 
 export default function HomePage() {
-  const [products, setProducts] = useState(realProducts)
+  const [filteredProducts, setFilteredProducts] = useState(realProducts)
+const [selectedCategory, setSelectedCategory] = useState("All")
+
+const handleFilterChange = (category: string) => {
+  setSelectedCategory(category)
+  if (category === "All") {
+    setFilteredProducts(realProducts)
+  } else {
+    setFilteredProducts(realProducts.filter((p) => p.category === category))
+  }
+}
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   // Contact form state
@@ -65,108 +77,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-50 backdrop-blur-sm bg-white/95">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 lg:h-20">
-            <div className="flex items-center space-x-8">
-              <Link href="/" className="flex items-center space-x-3">
-                <div className="relative">
-                  {/* <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 rounded-full flex items-center justify-center shadow-lg">
-                    <Gem className="h-4 w-4 lg:h-5 lg:w-5 text-white" />
-                  </div> */}
-                </div>
-                <Image
-                  src="/logo.png"
-                  alt="AAB Studio Logo"
-                  width={160}
-                  height={60}
-                  className="object-contain h-10 w-auto lg:h-32"
-                  priority
-                />
-              </Link>
-            </div>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex space-x-8">
-              <Link
-                href="/"
-                className="text-gray-700 hover:text-amber-600 font-medium transition-all duration-300 relative group"
-              >
-                Home
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-amber-600 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-              <Link
-                href="#collections"
-                className="text-gray-700 hover:text-amber-600 font-medium transition-all duration-300 relative group"
-              >
-                Collections
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-amber-600 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-              <Link
-                href="#about"
-                className="text-gray-700 hover:text-amber-600 font-medium transition-all duration-300 relative group"
-              >
-                About
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-amber-600 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-              <Link
-                href="#contact"
-                className="text-gray-700 hover:text-amber-600 font-medium transition-all duration-300 relative group"
-              >
-                Contact
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-amber-600 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-            </nav>
-
-            {/* Mobile Menu Button */}
-            <div className="md:hidden">
-              <button
-                onClick={toggleMobileMenu}
-                className="p-2 rounded-md text-gray-700 hover:text-amber-600 hover:bg-gray-100 transition-colors"
-              >
-                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </button>
-            </div>
-          </div>
-
-          {/* Mobile Navigation */}
-          {mobileMenuOpen && (
-            <div className="md:hidden border-t border-gray-100 bg-white">
-              <div className="px-2 pt-2 pb-3 space-y-1">
-                <Link
-                  href="/"
-                  onClick={closeMobileMenu}
-                  className="block px-3 py-2 text-gray-700 hover:text-amber-600 hover:bg-gray-50 rounded-md font-medium transition-colors"
-                >
-                  Home
-                </Link>
-                <Link
-                  href="#collections"
-                  onClick={closeMobileMenu}
-                  className="block px-3 py-2 text-gray-700 hover:text-amber-600 hover:bg-gray-50 rounded-md font-medium transition-colors"
-                >
-                  Collections
-                </Link>
-                <Link
-                  href="#about"
-                  onClick={closeMobileMenu}
-                  className="block px-3 py-2 text-gray-700 hover:text-amber-600 hover:bg-gray-50 rounded-md font-medium transition-colors"
-                >
-                  About
-                </Link>
-                <Link
-                  href="#contact"
-                  onClick={closeMobileMenu}
-                  className="block px-3 py-2 text-gray-700 hover:text-amber-600 hover:bg-gray-50 rounded-md font-medium transition-colors"
-                >
-                  Contact
-                </Link>
-              </div>
-            </div>
-          )}
-        </div>
-      </header>
+     
 
       {/* Hero Section */}
       <section className="relative h-[60vh] sm:h-screen flex items-center justify-center overflow-hidden">
@@ -326,10 +237,11 @@ Rooted in the Sanskrit word "Ārjas", meaning nobility, virtue, and purity of pu
                   <div className="text-gray-600 text-sm lg:text-base">Master Artisans</div>
                 </div>
               </div>
-
+              <div className="flex justify-center mt-6">
               <Button className="bg-amber-600 hover:bg-amber-700 text-white px-6 lg:px-8 py-2 lg:py-3">
                 Learn Our Story
               </Button>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3 lg:gap-4">
@@ -395,7 +307,9 @@ Rooted in the Sanskrit word "Ārjas", meaning nobility, virtue, and purity of pu
             </p>
           </div>
 
-          <ProductGrid products={products} itemsPerPage={12} />
+          <ProductFilter selected={selectedCategory} onFilter={handleFilterChange} />
+            <ProductGrid products={filteredProducts} itemsPerPage={12} />
+
         </div>
       </section>
 
@@ -647,125 +561,6 @@ Rooted in the Sanskrit word "Ārjas", meaning nobility, virtue, and purity of pu
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 lg:py-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8 mb-6 lg:mb-8">
-            <div className="col-span-2 md:col-span-1 space-y-1">
-              <div className="flex items-center space-x-3">
-                {/* <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center">
-                  <Gem className="h-4 w-4 lg:h-5 lg:w-5 text-white" />
-                </div> */}
-              <div className="flex flex-col items-left sm:items-start gap-2 sm:gap-3">
-  <div className="relative w-24 sm:w-32 lg:w-40 h-[50px] sm:h-[60px] lg:h-[100px]">
-    <Image
-      src="/logo.png"
-      alt="Arjas Studio Logo"
-      fill
-      className="object-contain"
-      priority
-    />
-  </div>
-  <p className="text-gray-400 text-center sm:text-left text-sm lg:text-base leading-relaxed">
-    Creating timeless luxury jewelry pieces that celebrate life's most precious moments.
-  </p>
-</div>
-</div>
-              <div className="flex space-x-3">
-                <div className="w-6 h-6 lg:w-8 lg:h-8 bg-amber-600 rounded-full flex items-center justify-center hover:bg-amber-500 transition-colors cursor-pointer">
-                  <span className="text-xs font-bold">f</span>
-                </div>
-                <div className="w-6 h-6 lg:w-8 lg:h-8 bg-amber-600 rounded-full flex items-center justify-center hover:bg-amber-500 transition-colors cursor-pointer">
-                  <span className="text-xs font-bold">i</span>
-                </div>
-                <div className="w-6 h-6 lg:w-8 lg:h-8 bg-amber-600 rounded-full flex items-center justify-center hover:bg-amber-500 transition-colors cursor-pointer">
-                  <span className="text-xs font-bold">t</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <h4 className="font-semibold text-base lg:text-lg">Collections</h4>
-              <div className="space-y-2 text-gray-400 text-sm lg:text-base">
-                <Link href="#" className="block hover:text-amber-400 transition-colors">
-                  Engagement Rings
-                </Link>
-                <Link href="#" className="block hover:text-amber-400 transition-colors">
-                  Wedding Bands
-                </Link>
-                <Link href="#" className="block hover:text-amber-400 transition-colors">
-                  Necklaces
-                </Link>
-                <Link href="#" className="block hover:text-amber-400 transition-colors">
-                  Earrings
-                </Link>
-                <Link href="#" className="block hover:text-amber-400 transition-colors">
-                  Bracelets
-                </Link>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <h4 className="font-semibold text-base lg:text-lg">Support</h4>
-              <div className="space-y-2 text-gray-400 text-sm lg:text-base">
-                <Link href="#" className="block hover:text-amber-400 transition-colors">
-                  Size Guide
-                </Link>
-                <Link href="#" className="block hover:text-amber-400 transition-colors">
-                  Care Instructions
-                </Link>
-                <Link href="#" className="block hover:text-amber-400 transition-colors">
-                  Warranty
-                </Link>
-                <Link href="#" className="block hover:text-amber-400 transition-colors">
-                  Returns
-                </Link>
-                <Link href="#" className="block hover:text-amber-400 transition-colors">
-                  FAQ
-                </Link>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <h4 className="font-semibold text-base lg:text-lg">Company</h4>
-              <div className="space-y-2 text-gray-400 text-sm lg:text-base">
-                <Link href="#" className="block hover:text-amber-400 transition-colors">
-                  About Us
-                </Link>
-                <Link href="#" className="block hover:text-amber-400 transition-colors">
-                  Our Story
-                </Link>
-                <Link href="#" className="block hover:text-amber-400 transition-colors">
-                  Careers
-                </Link>
-                <Link href="#" className="block hover:text-amber-400 transition-colors">
-                  Press
-                </Link>
-                <Link href="#" className="block hover:text-amber-400 transition-colors">
-                  Contact
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-800 pt-6 lg:pt-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-gray-400 text-sm lg:text-base text-center md:text-left">
-              &copy; 2024 AAB Studio. All rights reserved. Handcrafted with love in the USA.
-            </p>
-            <div className="flex flex-wrap justify-center space-x-4 lg:space-x-6">
-              <Link href="#" className="text-gray-400 hover:text-amber-400 transition-colors text-sm lg:text-base">
-                Privacy Policy
-              </Link>
-              <Link href="#" className="text-gray-400 hover:text-amber-400 transition-colors text-sm lg:text-base">
-                Terms of Service
-              </Link>
-              <Link href="#" className="text-gray-400 hover:text-amber-400 transition-colors text-sm lg:text-base">
-                Cookie Policy
-              </Link>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }

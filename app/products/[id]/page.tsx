@@ -71,8 +71,8 @@ export default function ProductPage() {
     <div className="bg-gradient-to-br from-[#f8e6c0] via-[#f2cc8f] to-[#e8b05e] py-10 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Back Link */}
-        <Link href="/products" className="text-sm text-amber-700 hover:underline mb-6 inline-block">
-          ← Back to Products
+        <Link href="/" className="text-sm text-amber-700 hover:underline mb-6 inline-block">
+          ← Back
         </Link>
 
         <div className="flex flex-col md:flex-row items-center gap-10">

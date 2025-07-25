@@ -1,10 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef} from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Heart } from "lucide-react"
 import Link from "next/link";
+
+
 
 interface Product {
   id: number
@@ -28,13 +30,22 @@ export function ProductGrid({ products, itemsPerPage = 12 }: ProductGridProps) {
   const [favorites, setFavorites] = useState<number[]>([])
   const [loadingImageId, setLoadingImageId] = useState<number | null>(null)
 
+  const gridRef = useRef<HTMLDivElement>(null)
+
+
   const totalPages = Math.ceil(products.length / itemsPerPage)
   const startIndex = (currentPage - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
   const currentProducts = products.slice(startIndex, endIndex)
+  
 
   const goToPage = (page: number) => {
     setCurrentPage(page)
+    if (gridRef.current) {
+      const offset = -80 // adjust based on your header height
+      const top = gridRef.current.getBoundingClientRect().top + window.pageYOffset + offset
+      window.scrollTo({ top, behavior: "smooth" })
+    }
   }
 
   const toggleFavorite = (productId: number) => {
@@ -77,7 +88,8 @@ export function ProductGrid({ products, itemsPerPage = 12 }: ProductGridProps) {
   }
 
   return (
-    <div className="space-y-12">
+  <div ref={gridRef} className="space-y-5">
+
       {/* Product Grid */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         {currentProducts.map((product) => (
