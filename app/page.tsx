@@ -114,11 +114,12 @@ const handleFilterChange = (category: string) => {
           </div>
           <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 justify-center pt-6 lg:pt-8">
             <Button
-              size="lg"
-              className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-8 lg:px-10 py-3 lg:py-4 text-base lg:text-lg font-medium shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
-            >
-              Explore Collections
-            </Button>
+  asChild
+  size="lg"
+  className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-8 lg:px-10 py-3 lg:py-4 text-base lg:text-lg font-medium shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+>
+  <a href="#collections">Explore Collections</a>
+</Button>
             <Button
               variant="outline"
               size="lg"
