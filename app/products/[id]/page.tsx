@@ -91,7 +91,7 @@ export default function ProductPage() {
           <div className="w-full md:w-1/2 text-center md:text-left space-y-4">
             <h1 className="text-3xl font-bold text-amber-800">{product.name}</h1>
             <p className="text-gray-700 text-sm">{product.description}</p>
-            <p className="text-xl font-semibold text-amber-600">₹{product.price.toFixed(2)}</p>
+            <p className="text-xl font-semibold text-amber-600">${product.price.toFixed(2)}</p>
 
             <div className="flex flex-wrap gap-3 mt-4 justify-center md:justify-start relative">
               <button
